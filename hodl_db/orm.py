@@ -1,4 +1,9 @@
 from twisted.enterprise.adbapi import ConnectionPool
+from hodl_db.schema import Column
+
+
+class Query:
+    pass
 
 
 class Session:
@@ -12,4 +17,11 @@ class Session:
 
 
 class Base(type):
-    pass
+    __tablename__ = None
+    _columns = {}
+
+    def __init__(cls, name, bases, attrs):
+        super().__init__(name, bases, attrs)
+        cls._columns = {
+            key: val for key, val in cls.__dict__.items() if isinstance(val, Column)
+        }
